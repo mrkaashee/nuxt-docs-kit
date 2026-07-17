@@ -52,6 +52,12 @@ const { customHandlers, editorToolbarItems, suggestionItems, editorBaseClass } =
 provide("editorHandlers", computed(() => customHandlers))
 
 const activeEditor = ref<any>(null)
+const panesRowRef = ref<HTMLElement | null>(null)
+
+// Reset scroll position when switching modes — matches qarpeo behaviour
+watch(() => editor.editorMode.value, () => {
+  if (panesRowRef.value) panesRowRef.value.scrollTop = 0
+})
 
 onMounted(() => window.addEventListener("keydown", editor.handleGlobalKeydown))
 onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalKeydown))
@@ -133,6 +139,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
 
       <!-- Panes -->
       <div
+        ref="panesRowRef"
         class="flex flex-1"
         :class="editor.editorMode.value === 'visual' ? 'overflow-y-auto' : 'min-h-0 overflow-hidden'"
       >
@@ -158,13 +165,17 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
         <textarea
           v-else
           v-model="editor.content.value"
-          class="bg-default text-foreground min-h-0 w-full flex-1 resize-none p-8 font-mono text-sm outline-none"
+          class="bg-default text-foreground min-h-0 w-full flex-1 resize-none overflow-auto p-8 font-mono text-sm outline-none"
           placeholder="Write Markdown here…"
           spellcheck="false"
         />
 
         <!-- Preview pane -->
-        <div v-if="editor.showPreview.value" class="border-default relative w-1/2 overflow-y-auto border-l">
+        <div
+          v-if="editor.showPreview.value"
+          class="border-default relative w-1/2 border-l"
+          :class="editor.editorMode.value === 'source' ? 'min-h-0 overflow-y-auto' : ''"
+        >
           <article class="doc-content mx-auto max-w-3xl p-8">
             <DocReader
               v-if="editor.previewAst.value"
