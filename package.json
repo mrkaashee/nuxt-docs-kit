@@ -11,6 +11,7 @@
     "prepare": "vp config"
   },
   "dependencies": {
+    "@comark/nuxt": "^0.5.1",
     "@comark/vue": "^0.5.1",
     "@iconify-json/simple-icons": "^1.2.90",
     "@nuxt/ui": "^4.10.0",

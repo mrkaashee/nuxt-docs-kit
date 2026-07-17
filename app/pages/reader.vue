@@ -86,7 +86,9 @@ const stats = useReadingStats(computed(() => rawBody))
 
 // Save state — in a real app the host calls its API here
 const isSaved = ref(false)
-function handleSave() { isSaved.value = !isSaved.value }
+function handleSave() {
+  isSaved.value = !isSaved.value
+}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric" })
@@ -94,70 +96,80 @@ function formatDate(iso: string) {
 </script>
 
 <template>
-  <UPage>
-    <UPageHeader>
-      <template #headline>
-        <div class="flex items-center gap-2">
-          <NuxtLink to="/" class="text-muted hover:text-primary text-sm transition-colors">nuxt-doc-kit</NuxtLink>
-          <UIcon name="i-lucide-chevron-right" class="text-muted/40 size-3" />
-          <UBadge label="Demo" color="neutral" variant="subtle" size="xs" class="rounded-full" />
-        </div>
-      </template>
-      <template #title>{{ doc.title }}</template>
-      <template #description>{{ doc.description }}</template>
-      <template #links>
-        <DocQuickActions :doc-url="`http://localhost:3000/reader`" :doc-title="doc.title" />
-      </template>
-    </UPageHeader>
+  <UMain>
+    <UPage>
+      <UPageHeader>
+        <template #headline>
+          <div class="flex items-center gap-2">
+            <NuxtLink to="/" class="text-muted hover:text-primary text-sm transition-colors"
+              >nuxt-doc-kit</NuxtLink
+            >
+            <UIcon name="i-lucide-chevron-right" class="text-muted/40 size-3" />
+            <UBadge label="Demo" color="neutral" variant="subtle" size="xs" class="rounded-full" />
+          </div>
+        </template>
+        <template #title>{{ doc.title }}</template>
+        <template #description>{{ doc.description }}</template>
+        <template #links>
+          <DocQuickActions :doc-url="`http://localhost:3000/reader`" :doc-title="doc.title" />
+        </template>
+      </UPageHeader>
 
-    <UPageBody>
-      <!-- Author + meta card -->
-      <UCard variant="subtle" :ui="{ body: 'flex flex-wrap items-center justify-between gap-4' }">
-        <UUser
-          name="demo"
-          description="Author"
-          :avatar="{ src: undefined, alt: 'demo' }"
-          size="lg"
+      <UPageBody>
+        <!-- Author + meta card -->
+        <UCard variant="subtle" :ui="{ body: 'flex flex-wrap items-center justify-between gap-4' }">
+          <UUser
+            name="demo"
+            description="Author"
+            :avatar="{ src: undefined, alt: 'demo' }"
+            size="lg"
+          />
+          <div class="text-muted flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+            <div class="flex items-center gap-1.5">
+              <UIcon name="i-lucide-calendar" class="size-3.5" />
+              <span>{{ formatDate(doc.publishedAt) }}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <UIcon name="i-lucide-clock" class="size-3.5" />
+              <span>{{ stats.readingTimeLabel }}</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <UIcon name="i-lucide-eye" class="size-3.5" />
+              <span>{{ doc.viewCount.toLocaleString() }} views</span>
+            </div>
+          </div>
+        </UCard>
+
+        <!-- Doc body -->
+        <article class="doc-content">
+          <DocReader :page="page" />
+        </article>
+
+        <!-- Tags -->
+        <div class="border-default mt-8 flex flex-wrap items-center gap-2 border-t pt-6">
+          <UBadge
+            v-for="tag in doc.tags"
+            :key="tag"
+            :label="`#${tag}`"
+            color="neutral"
+            variant="soft"
+          />
+        </div>
+      </UPageBody>
+
+      <!-- Right sidebar — DocPageTocSidebar from the reader layer -->
+      <template #right>
+        <DocPageTocSidebar
+          :toc-links="tocLinks"
+          base-path="/reader"
+          username="demo"
+          doc-slug="getting-started"
+          :logged-in="false"
+          :is-owner="false"
+          :is-saved="isSaved"
+          @save="handleSave"
         />
-        <div class="text-muted flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-          <div class="flex items-center gap-1.5">
-            <UIcon name="i-lucide-calendar" class="size-3.5" />
-            <span>{{ formatDate(doc.publishedAt) }}</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <UIcon name="i-lucide-clock" class="size-3.5" />
-            <span>{{ stats.readingTimeLabel }}</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <UIcon name="i-lucide-eye" class="size-3.5" />
-            <span>{{ doc.viewCount.toLocaleString() }} views</span>
-          </div>
-        </div>
-      </UCard>
-
-      <!-- Doc body -->
-      <article class="doc-content">
-        <DocReader :page="page" />
-      </article>
-
-      <!-- Tags -->
-      <div class="border-default mt-8 flex flex-wrap items-center gap-2 border-t pt-6">
-        <UBadge v-for="tag in doc.tags" :key="tag" :label="`#${tag}`" color="neutral" variant="soft" />
-      </div>
-    </UPageBody>
-
-    <!-- Right sidebar — DocPageTocSidebar from the reader layer -->
-    <template #right>
-      <DocPageTocSidebar
-        :toc-links="tocLinks"
-        base-path="/reader"
-        username="demo"
-        doc-slug="getting-started"
-        :logged-in="false"
-        :is-owner="false"
-        :is-saved="isSaved"
-        @save="handleSave"
-      />
-    </template>
-  </UPage>
+      </template>
+    </UPage>
+  </UMain>
 </template>

@@ -17,6 +17,9 @@ importers:
 
   .:
     dependencies:
+      '@comark/nuxt':
+        specifier: ^0.5.1
+        version: 0.5.1(katex@0.17.0)(magicast@0.5.3)(nuxt@4.4.8(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7))(@parcel/watcher@2.5.6)(@voidzero-dev/vite-plus-core@0.2.5(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(@vue/compiler-sfc@3.5.40)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.1)(ioredis@5.11.1)(magicast@0.5.3)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@voidzero-dev/vite-plus-core@0.2.5(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0)))(rolldown@1.0.0-beta.57(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1))(rollup-plugin-visualizer@7.0.1(rolldown@1.0.0-beta.57(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1))(rollup@4.62.2))(rollup@4.62.2)(srvx@0.11.22)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(shiki@4.3.1)(vue@3.5.40(typescript@6.0.3))
       '@comark/vue':
         specifier: ^0.5.1
         version: 0.5.1(katex@0.17.0)(shiki@4.3.1)(vue@3.5.40(typescript@6.0.3))
@@ -260,6 +263,11 @@ packages:
 
   '@colordx/core@5.5.0':
     resolution: {integrity: sha512-3PxTH8itZzltK0U9jTwVVnjLXvnDYuq3m+QXsHkENxWiPRh4WaoLcs1SQjqgZ55kS+QyirpH5BVwzP2gMVG6EQ==}
+
+  '@comark/nuxt@0.5.1':
+    resolution: {integrity: sha512-BvXUbzasGRqQ6bWGuRMO0E6KhWXXpv8FpursPHTixTwJxYVa7BFHUVqvq4cfjj5/6VgbXwofvHiawVQV2k33og==}
+    peerDependencies:
+      nuxt: ^4.0.0
 
   '@comark/vue@0.5.1':
     resolution: {integrity: sha512-uz5Oirzg7ruuJJItceWRswAftuMoY17Omge9bsUampmAL/XdI77YrBOozA5DlId+OCX0VXnt1tCCe4c1IrcJ7w==}
@@ -5954,6 +5962,19 @@ snapshots:
   '@cloudflare/workers-types@4.20260702.1': {}
 
   '@colordx/core@5.5.0': {}
+
+  '@comark/nuxt@0.5.1(katex@0.17.0)(magicast@0.5.3)(nuxt@4.4.8(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7))(@parcel/watcher@2.5.6)(@voidzero-dev/vite-plus-core@0.2.5(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(@vue/compiler-sfc@3.5.40)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.1)(ioredis@5.11.1)(magicast@0.5.3)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@voidzero-dev/vite-plus-core@0.2.5(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0)))(rolldown@1.0.0-beta.57(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1))(rollup-plugin-visualizer@7.0.1(rolldown@1.0.0-beta.57(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1))(rollup@4.62.2))(rollup@4.62.2)(srvx@0.11.22)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(shiki@4.3.1)(vue@3.5.40(typescript@6.0.3))':
+    dependencies:
+      '@comark/vue': 0.5.1(katex@0.17.0)(shiki@4.3.1)(vue@3.5.40(typescript@6.0.3))
+      '@nuxt/kit': 4.4.8(magicast@0.5.3)
+      comark: 0.5.1(katex@0.17.0)(shiki@4.3.1)
+      nuxt: 4.4.8(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7))(@parcel/watcher@2.5.6)(@voidzero-dev/vite-plus-core@0.2.5(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(@vue/compiler-sfc@3.5.40)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.1)(ioredis@5.11.1)(magicast@0.5.3)(oxlint@1.73.0(oxlint-tsgolint@0.24.0)(vite-plus@0.2.5(@voidzero-dev/vite-plus-core@0.2.5(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0))(esbuild@0.28.1)(jiti@2.7.0)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0)))(rolldown@1.0.0-beta.57(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1))(rollup-plugin-visualizer@7.0.1(rolldown@1.0.0-beta.57(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1))(rollup@4.62.2))(rollup@4.62.2)(srvx@0.11.22)(terser@5.49.0)(typescript@6.0.3)(unrun@0.2.39)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - beautiful-mermaid
+      - katex
+      - magicast
+      - shiki
+      - vue
 
   '@comark/vue@0.5.1(katex@0.17.0)(shiki@4.3.1)(vue@3.5.40(typescript@6.0.3))':
     dependencies:

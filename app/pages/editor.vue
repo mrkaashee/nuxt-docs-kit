@@ -17,8 +17,28 @@ Edit this document. Try the toolbar or type **/** for slash commands.
 - Visual editor (TipTap)
 - Source (Markdown) editor
 - Live preview pane
-- Math: $E = mc^2$
-- MDC components: ::callout{icon="i-lucide-info" color="info"}\nThis is a callout.\n::
+
+## Math
+
+Inline math: $E = mc^2$
+
+Block math:
+
+$$
+\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}
+$$
+
+## MDC Components
+
+MDC blocks must be top-level, not inside list items.
+
+::callout{icon="i-lucide-info" color="info"}
+This is an info callout rendered via MDC syntax.
+::
+
+::callout{icon="i-lucide-triangle-alert" color="warning"}
+This is a warning callout.
+::
 `
 
 const doc = ref({
