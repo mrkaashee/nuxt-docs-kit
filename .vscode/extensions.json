@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    "Nuxtr.nuxt-vscode-extentions",
+    "Nuxtr.nuxtr-vscode",
+    "Nuxt.mdc",
+    "vscode-icons-team.vscode-icons",
+    "GitHub.github-vscode-theme",
+    "antfu.goto-alias",
+    "antfu.iconify",
+    "geekabe.iconify-search",
+    "Cardinal90.multi-cursor-case-preserve",
+    "bradlc.vscode-tailwindcss",
+    "Vue.volar",
+    "kisstkondoros.vscode-gutter-preview",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "YoavBls.pretty-ts-errors",
+    "wayou.vscode-todo-highlight",
+    "VoidZero.vite-plus-extension-pack"
+  ]
+}
