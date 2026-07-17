@@ -8,37 +8,198 @@
 definePageMeta({ layout: false })
 
 // ── Hardcoded demo doc ─────────────────────────────────────────────────────
-const INITIAL_CONTENT = `# Getting Started
+const INITIAL_CONTENT = `# Getting Started with nuxt-doc-kit
 
-Edit this document. Try the toolbar or type **/** for slash commands.
+**nuxt-doc-kit** is a Nuxt layer that provides a production-ready doc reader and editor for any Nuxt app. Zero API calls — your app owns fetching, the kit owns rendering.
 
-## Features
+## Installation
 
-- Visual editor (TipTap)
-- Source (Markdown) editor
-- Live preview pane
+Add the layers to your \`nuxt.config.ts\`:
+
+\`\`\`ts
+export default defineNuxtConfig({
+  extends: [
+    "nuxt-doc-kit/layers/reader",
+    "nuxt-doc-kit/layers/editor",
+  ],
+})
+\`\`\`
+
+## Writing Content
+
+You can use standard **Markdown** with full GFM support. Type \`/\` anywhere to open the slash command menu.
+
+### Text Formatting
+
+You can write **bold**, _italic_, ~~strikethrough~~, and \`inline code\`. Links work too — [visit Nuxt](https://nuxt.com).
+
+### Lists
+
+Unordered list:
+- Reader layer — rendering only
+- Editor layer — state + toolbar
+- Both are fully prop-driven
+
+Ordered list:
+1. Install the package
+2. Extend the layers
+3. Pass your data via props
+
+Task list:
+- [x] Install nuxt-doc-kit
+- [x] Add to nuxt.config.ts
+- [ ] Build your first doc page
+
+### Blockquote
+
+> The best documentation is the kind that doesn't need to exist — but when it does, it should be a joy to read and write.
+
+---
+
+## Code Blocks
+
+\`\`\`vue [DocPage.vue]
+<script lang="ts" setup>
+const { data } = await useFetch('/api/docs/my-doc?include=body')
+const doc = computed(() => data.value?.data?.doc)
+const body = computed(() => data.value?.data?.body)
+const rawBody = computed(() => data.value?.data?.rawBody ?? '')
+const tocLinks = computed(() => body.value?.meta?.toc?.links ?? [])
+const isSaved = ref(false)
+</script>
+
+<template>
+  <UPage>
+    <UPageBody>
+      <DocReader :page="{ body, rawBody, title: doc.title }" />
+    </UPageBody>
+    <template #right>
+      <DocPageTocSidebar
+        :toc-links="tocLinks"
+        :username="doc.ownerUsername"
+        :doc-slug="doc.slug"
+        :is-saved="isSaved"
+        @save="isSaved = true"
+      />
+    </template>
+  </UPage>
+</template>
+\`\`\`
+
+\`\`\`ts [useDocEditor usage]
+const editor = useDocEditor({
+  doc,
+  onSave: async (content, meta) => {
+    await $fetch(\`/api/docs/\${doc.value.id}\`, {
+      method: "PATCH",
+      body: { ...meta, body: content },
+    })
+  },
+  onPublish: async () => {
+    await $fetch(\`/api/docs/\${doc.value.id}/publish\`, { method: "POST" })
+  },
+  onAutoSave: async (content) => {
+    await $fetch(\`/api/docs/\${doc.value.id}/body\`, {
+      method: "PATCH",
+      body: { body: content },
+    })
+  },
+})
+\`\`\`
+
+---
 
 ## Math
 
-Inline math: $E = mc^2$
+Inline math renders naturally: $E = mc^2$ and $a^2 + b^2 = c^2$.
 
 Block math:
 
 $$
-\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}
+\\int_0^\\infty e^{-x^2} \\, dx = \\frac{\\sqrt{\\pi}}{2}
 $$
+
+$$
+\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}
+$$
+
+---
 
 ## MDC Components
 
-MDC blocks must be top-level, not inside list items.
+MDC blocks must be top-level — not inside list items or other blocks.
 
 ::callout{icon="i-lucide-info" color="info"}
-This is an info callout rendered via MDC syntax.
+**Reader layer** — DocReader, DocPageTocSidebar, DocPreviewBanner, DocFollowersGate, DocRequestAccessGate, DocQuickActions, useReadingStats, useActiveHeading.
 ::
 
 ::callout{icon="i-lucide-triangle-alert" color="warning"}
-This is a warning callout.
+**Editor layer** — useDocEditor, useEditorToolbar. All save and publish operations go through callbacks you provide — the kit never calls your API directly.
 ::
+
+::callout{icon="i-lucide-check-circle" color="success"}
+Both layers work with any Nuxt app. No platform lock-in.
+::
+
+### Steps
+
+::steps
+### Install
+
+\`\`\`bash
+pnpm add nuxt-doc-kit
+\`\`\`
+
+### Extend
+
+Add the layers to \`nuxt.config.ts\`.
+
+### Use
+
+Pass your data via props. The kit handles rendering.
+::
+
+### Card Group
+
+::card-group
+:::card{title="DocReader" icon="i-lucide-book-open"}
+Renders Comark AST or raw Markdown. Supports math, mermaid diagrams, and all MDC components.
+:::
+:::card{title="DocPageTocSidebar" icon="i-lucide-list"}
+Active-heading TOC with save/actions. Fully prop-driven via UContentToc.
+:::
+:::card{title="useDocEditor" icon="i-lucide-pencil"}
+Editor state with onSave/onPublish callbacks. No API calls inside the kit.
+:::
+:::card{title="useEditorToolbar" icon="i-lucide-toolbar"}
+Complete toolbar config, slash commands, and MDC insert handlers for UEditor.
+:::
+::
+
+---
+
+## Tables
+
+| Component | Layer | API calls |
+|-----------|-------|-----------|
+| DocReader | reader | None |
+| DocPageTocSidebar | reader | None |
+| DocPreviewBanner | reader | None |
+| DocFollowersGate | reader | None |
+| DocRequestAccessGate | reader | @request-access emit |
+| DocQuickActions | reader | None |
+| useDocEditor | editor | Via callbacks |
+| useEditorToolbar | editor | None |
+
+---
+
+## Mentions
+
+You can mention users with the \`@\` character — type \`@al\` in the editor to try it.
+
+---
+
+*Edit this content in the visual editor or switch to Markdown source mode. Press* \`/\` *for slash commands, or use the toolbar above.*
 `
 
 const doc = ref({
