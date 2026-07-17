@@ -244,6 +244,11 @@ export function useDocEditor(options: DocEditorOptions) {
     if (showPreview.value) void buildPreview()
   }
 
+  // Also build on mount if preview was already open (persisted localStorage)
+  onMounted(() => {
+    if (showPreview.value && content.value) void buildPreview()
+  })
+
   // Autosave — 30s debounce after last keystroke
   if (onAutoSave) {
     watchDebounced(content, () => autoSaveBody(), { debounce: 30_000 })

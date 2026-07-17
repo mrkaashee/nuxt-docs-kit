@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  extends: ["./layers/reader", "./layers/editor"],
   modules: ["@nuxt/ui", "@nuxthub/core"],
   css: ["~/assets/css/main.css"],
   compatibilityDate: "2026-07-13",

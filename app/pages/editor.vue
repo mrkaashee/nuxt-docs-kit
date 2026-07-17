@@ -8,6 +8,19 @@
 definePageMeta({ layout: false })
 
 // ── Hardcoded demo doc ─────────────────────────────────────────────────────
+const INITIAL_CONTENT = `# Getting Started
+
+Edit this document. Try the toolbar or type **/** for slash commands.
+
+## Features
+
+- Visual editor (TipTap)
+- Source (Markdown) editor
+- Live preview pane
+- Math: $E = mc^2$
+- MDC components: ::callout{icon="i-lucide-info" color="info"}\nThis is a callout.\n::
+`
+
 const doc = ref({
   id: "doc_demo_1",
   title: "Getting Started with nuxt-doc-kit",
@@ -15,6 +28,8 @@ const doc = ref({
   status: "draft",
   seo: {},
   tags: ["nuxt", "docs"],
+  // seed initial content here so useDocEditor picks it up on init
+  draftBody: INITIAL_CONTENT,
 })
 
 // ── Editor state (from the editor layer) ──────────────────────────────────
@@ -49,20 +64,6 @@ const editor = useDocEditor({
     ].filter((u) => u.label.includes(query.toLowerCase()))
   },
 })
-
-// ── Seed initial content ───────────────────────────────────────────────────
-editor.content.value = `# Getting Started
-
-Edit this document. Try the toolbar or type **/** for slash commands.
-
-## Features
-
-- Visual editor (TipTap)
-- Source (Markdown) editor
-- Live preview pane
-- Math: $E = mc^2$
-- MDC components: ::callout{icon="i-lucide-info" color="info"}\nThis is a callout.\n::
-`
 
 // ── Toolbar config ─────────────────────────────────────────────────────────
 // Image/link/mermaid modals — manage open state here, pass handlers to toolbar
