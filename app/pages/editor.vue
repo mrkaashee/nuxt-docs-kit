@@ -1,206 +1,11 @@
 <script lang="ts" setup>
+import { EDITOR_DEMO_CONTENT } from "~/content/editor-demo"
+
 /**
  * editor.vue — nuxt-doc-kit editor layer demo
- *
- * Shows how to wire useDocEditor with your own save/publish callbacks.
- * All data is hardcoded — no API calls in this demo page.
+ * All data is hardcoded — no API calls.
  */
 definePageMeta({ layout: false })
-
-// ── Hardcoded demo doc ─────────────────────────────────────────────────────
-const INITIAL_CONTENT = `# Getting Started with nuxt-doc-kit
-
-**nuxt-doc-kit** is a Nuxt layer that provides a production-ready doc reader and editor for any Nuxt app. Zero API calls — your app owns fetching, the kit owns rendering.
-
-## Installation
-
-Add the layers to your \`nuxt.config.ts\`:
-
-\`\`\`ts
-export default defineNuxtConfig({
-  extends: [
-    "nuxt-doc-kit/layers/reader",
-    "nuxt-doc-kit/layers/editor",
-  ],
-})
-\`\`\`
-
-## Writing Content
-
-You can use standard **Markdown** with full GFM support. Type \`/\` anywhere to open the slash command menu.
-
-### Text Formatting
-
-You can write **bold**, _italic_, ~~strikethrough~~, and \`inline code\`. Links work too — [visit Nuxt](https://nuxt.com).
-
-### Lists
-
-Unordered list:
-- Reader layer — rendering only
-- Editor layer — state + toolbar
-- Both are fully prop-driven
-
-Ordered list:
-1. Install the package
-2. Extend the layers
-3. Pass your data via props
-
-Task list:
-- [x] Install nuxt-doc-kit
-- [x] Add to nuxt.config.ts
-- [ ] Build your first doc page
-
-### Blockquote
-
-> The best documentation is the kind that doesn't need to exist — but when it does, it should be a joy to read and write.
-
----
-
-## Code Blocks
-
-\`\`\`vue [DocPage.vue]
-<script lang="ts" setup>
-const { data } = await useFetch('/api/docs/my-doc?include=body')
-const doc = computed(() => data.value?.data?.doc)
-const body = computed(() => data.value?.data?.body)
-const rawBody = computed(() => data.value?.data?.rawBody ?? '')
-const tocLinks = computed(() => body.value?.meta?.toc?.links ?? [])
-const isSaved = ref(false)
-</script>
-
-<template>
-  <UPage>
-    <UPageBody>
-      <DocReader :page="{ body, rawBody, title: doc.title }" />
-    </UPageBody>
-    <template #right>
-      <DocPageTocSidebar
-        :toc-links="tocLinks"
-        :username="doc.ownerUsername"
-        :doc-slug="doc.slug"
-        :is-saved="isSaved"
-        @save="isSaved = true"
-      />
-    </template>
-  </UPage>
-</template>
-\`\`\`
-
-\`\`\`ts [useDocEditor usage]
-const editor = useDocEditor({
-  doc,
-  onSave: async (content, meta) => {
-    await $fetch(\`/api/docs/\${doc.value.id}\`, {
-      method: "PATCH",
-      body: { ...meta, body: content },
-    })
-  },
-  onPublish: async () => {
-    await $fetch(\`/api/docs/\${doc.value.id}/publish\`, { method: "POST" })
-  },
-  onAutoSave: async (content) => {
-    await $fetch(\`/api/docs/\${doc.value.id}/body\`, {
-      method: "PATCH",
-      body: { body: content },
-    })
-  },
-})
-\`\`\`
-
----
-
-## Math
-
-Inline math renders naturally: $E = mc^2$ and $a^2 + b^2 = c^2$.
-
-Block math:
-
-$$
-\\int_0^\\infty e^{-x^2} \\, dx = \\frac{\\sqrt{\\pi}}{2}
-$$
-
-$$
-\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}
-$$
-
----
-
-## MDC Components
-
-MDC blocks must be top-level — not inside list items or other blocks.
-
-::callout{icon="i-lucide-info" color="info"}
-**Reader layer** — DocReader, DocPageTocSidebar, DocPreviewBanner, DocFollowersGate, DocRequestAccessGate, DocQuickActions, useReadingStats, useActiveHeading.
-::
-
-::callout{icon="i-lucide-triangle-alert" color="warning"}
-**Editor layer** — useDocEditor, useEditorToolbar. All save and publish operations go through callbacks you provide — the kit never calls your API directly.
-::
-
-::callout{icon="i-lucide-check-circle" color="success"}
-Both layers work with any Nuxt app. No platform lock-in.
-::
-
-### Steps
-
-::steps
-### Install
-
-\`\`\`bash
-pnpm add nuxt-doc-kit
-\`\`\`
-
-### Extend
-
-Add the layers to \`nuxt.config.ts\`.
-
-### Use
-
-Pass your data via props. The kit handles rendering.
-::
-
-### Card Group
-
-::card-group
-:::card{title="DocReader" icon="i-lucide-book-open"}
-Renders Comark AST or raw Markdown. Supports math, mermaid diagrams, and all MDC components.
-:::
-:::card{title="DocPageTocSidebar" icon="i-lucide-list"}
-Active-heading TOC with save/actions. Fully prop-driven via UContentToc.
-:::
-:::card{title="useDocEditor" icon="i-lucide-pencil"}
-Editor state with onSave/onPublish callbacks. No API calls inside the kit.
-:::
-:::card{title="useEditorToolbar" icon="i-lucide-toolbar"}
-Complete toolbar config, slash commands, and MDC insert handlers for UEditor.
-:::
-::
-
----
-
-## Tables
-
-| Component | Layer | API calls |
-|-----------|-------|-----------|
-| DocReader | reader | None |
-| DocPageTocSidebar | reader | None |
-| DocPreviewBanner | reader | None |
-| DocFollowersGate | reader | None |
-| DocRequestAccessGate | reader | @request-access emit |
-| DocQuickActions | reader | None |
-| useDocEditor | editor | Via callbacks |
-| useEditorToolbar | editor | None |
-
----
-
-## Mentions
-
-You can mention users with the \`@\` character — type \`@al\` in the editor to try it.
-
----
-
-*Edit this content in the visual editor or switch to Markdown source mode. Press* \`/\` *for slash commands, or use the toolbar above.*
-`
 
 const doc = ref({
   id: "doc_demo_1",
@@ -209,36 +14,24 @@ const doc = ref({
   status: "draft",
   seo: {},
   tags: ["nuxt", "docs"],
-  // seed initial content here so useDocEditor picks it up on init
-  draftBody: INITIAL_CONTENT,
+  draftBody: EDITOR_DEMO_CONTENT,
 })
 
-// ── Editor state (from the editor layer) ──────────────────────────────────
 const editor = useDocEditor({
   doc,
-
-  // onSave — host calls its own API here, kit just tracks state
   onSave: async (content, meta) => {
-    console.log("[demo] save called", { chars: content.length, title: meta.title })
-    // In a real app: await $fetch(`/api/docs/${doc.value.id}`, { method: "PATCH", body: { ...meta, body: content } })
-    await new Promise((r) => setTimeout(r, 600)) // simulate network
+    console.log("[demo] save", { chars: content.length, title: meta.title })
+    await new Promise((r) => setTimeout(r, 600))
   },
-
-  // onPublish — host calls its own publish endpoint
   onPublish: async () => {
-    console.log("[demo] publish called")
+    console.log("[demo] publish")
     await new Promise((r) => setTimeout(r, 600))
     doc.value.status = "published"
   },
-
-  // onAutoSave — called 30s after last keystroke, body-only
   onAutoSave: async (content) => {
     console.log("[demo] autosave", content.length, "chars")
   },
-
-  // onMentionSearch — return items for the @ mention dropdown
   onMentionSearch: async (query) => {
-    // In a real app: return await $fetch(`/api/accounts/search?q=${query}`)
     return [
       { id: "u1", label: "alice", description: "Alice Smith", mentionType: "user" },
       { id: "u2", label: "bob", description: "Bob Jones", mentionType: "user" },
@@ -246,25 +39,20 @@ const editor = useDocEditor({
   },
 })
 
-// ── Toolbar config ─────────────────────────────────────────────────────────
-// Image/link/mermaid modals — manage open state here, pass handlers to toolbar
 const imageModalOpen = ref(false)
 const linkModalOpen = ref(false)
 const mermaidModalOpen = ref(false)
-let _pendingEditor: any = null
 
 const { customHandlers, editorToolbarItems, suggestionItems, editorBaseClass } = useEditorToolbar({
-  openImageModal: (e) => { _pendingEditor = e; imageModalOpen.value = true },
-  openLinkModal: (e) => { _pendingEditor = e; linkModalOpen.value = true },
-  openMermaidModal: (e) => { _pendingEditor = e; mermaidModalOpen.value = true },
+  openImageModal: (e) => { imageModalOpen.value = true },
+  openLinkModal: (e) => { linkModalOpen.value = true },
+  openMermaidModal: (e) => { mermaidModalOpen.value = true },
 })
 
 provide("editorHandlers", computed(() => customHandlers))
 
-// ── Active editor ref (visual editor exposes it up) ────────────────────────
 const activeEditor = ref<any>(null)
 
-// ── Global keyboard shortcuts ──────────────────────────────────────────────
 onMounted(() => window.addEventListener("keydown", editor.handleGlobalKeydown))
 onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalKeydown))
 </script>
@@ -288,21 +76,14 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
       <UBadge v-else-if="doc.status === 'published'" label="Published" color="success" variant="subtle" size="xs" />
       <UBadge v-else label="Draft" color="neutral" variant="subtle" size="xs" />
       <UButton
-        icon="i-lucide-save"
-        label="Save"
-        size="xs"
-        color="primary"
+        icon="i-lucide-save" label="Save" size="xs" color="primary"
         :variant="editor.hasUnsavedChanges.value ? 'solid' : 'soft'"
         :loading="editor.saving.value"
         :disabled="!editor.hasUnsavedChanges.value"
         @click="editor.save"
       />
       <UButton
-        icon="i-lucide-globe"
-        label="Publish"
-        size="xs"
-        color="success"
-        variant="solid"
+        icon="i-lucide-globe" label="Publish" size="xs" color="success" variant="solid"
         :loading="editor.publishing.value"
         :disabled="editor.hasUnsavedChanges.value || editor.publishing.value"
         @click="editor.publish"
@@ -311,7 +92,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
 
     <!-- Editor body -->
     <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-      <!-- Toolbar (visual mode) -->
+      <!-- Visual toolbar -->
       <div v-if="editor.editorMode.value === 'visual'" class="border-default bg-default/60 flex shrink-0 items-center border-b backdrop-blur-sm">
         <UEditorToolbar
           v-if="activeEditor"
@@ -320,7 +101,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
           :handlers="customHandlers"
           class="flex-1 overflow-x-auto px-4 py-2"
         />
-        <div v-else class="flex-1 px-4 py-2"><div class="bg-muted h-7 w-48 animate-pulse rounded" /></div>
+        <div v-else class="flex-1 px-4 py-2">
+          <div class="bg-muted h-7 w-48 animate-pulse rounded" />
+        </div>
         <div class="border-default flex items-center gap-1 border-l px-2 py-2">
           <UButton icon="i-lucide-code" size="xs" color="neutral" variant="ghost" title="Source mode" @click="editor.toggleEditorMode" />
           <UButton
@@ -335,7 +118,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
       <!-- Source toolbar -->
       <div v-else class="border-default bg-default/60 flex shrink-0 items-center justify-between border-b px-3 py-2">
         <span class="text-muted flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest">
-          <UIcon name="i-lucide-code" class="size-3" />Markdown Source
+          <UIcon name="i-lucide-code" class="size-3" /> Markdown Source
         </span>
         <div class="flex items-center gap-1">
           <UButton icon="i-lucide-layout-template" size="xs" color="neutral" variant="ghost" title="Visual editor" @click="editor.toggleEditorMode" />
@@ -349,7 +132,10 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
       </div>
 
       <!-- Panes -->
-      <div class="flex flex-1" :class="editor.editorMode.value === 'visual' ? 'overflow-y-auto' : 'min-h-0 overflow-hidden'">
+      <div
+        class="flex flex-1"
+        :class="editor.editorMode.value === 'visual' ? 'overflow-y-auto' : 'min-h-0 overflow-hidden'"
+      >
         <!-- Visual editor -->
         <UEditor
           v-if="editor.editorMode.value === 'visual'"
@@ -363,12 +149,12 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
           :class="editor.showPreview.value ? 'w-1/2' : 'w-full'"
           @keydown.ctrl.s.prevent="editor.save"
           @keydown.meta.s.prevent="editor.save"
-          @vue:mounted="(e: any) => { activeEditor = tiptap }"
+          @vue:mounted="activeEditor = tiptap"
         >
           <UEditorSuggestionMenu :editor="tiptap" :items="suggestionItems" />
         </UEditor>
 
-        <!-- Source editor — simple textarea fallback for demo -->
+        <!-- Source editor -->
         <textarea
           v-else
           v-model="editor.content.value"
@@ -384,7 +170,9 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
               v-if="editor.previewAst.value"
               :page="{ body: editor.previewAst.value, rawBody: editor.content.value }"
             />
-            <p v-else-if="!editor.previewParsing.value" class="text-muted text-sm italic">Nothing to preview yet.</p>
+            <p v-else-if="!editor.previewParsing.value" class="text-muted text-sm italic">
+              Nothing to preview yet.
+            </p>
           </article>
           <div v-if="editor.previewParsing.value" class="pointer-events-none absolute top-3 right-4">
             <UIcon name="i-lucide-loader-circle" class="text-muted size-4 animate-spin" />
@@ -401,7 +189,7 @@ onBeforeUnmount(() => window.removeEventListener("keydown", editor.handleGlobalK
         <span>{{ editor.readingTime.value }} min read</span>
       </span>
       <NuxtLink to="/reader" class="text-muted hover:text-primary flex items-center gap-1 text-xs transition-colors">
-        <UIcon name="i-lucide-eye" class="size-3" />View reader demo
+        <UIcon name="i-lucide-eye" class="size-3" /> View reader demo
       </NuxtLink>
     </div>
   </div>
