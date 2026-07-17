@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useClipboard } from "@vueuse/core"
 /**
  * DocQuickActions — share popover with UTM-tagged platform links.
  *
@@ -39,7 +40,9 @@ async function copyForPlatform(source: string) {
     await copy(utmUrl(source))
     copiedSource.value = source
     toast.add({ title: `Link copied for ${source}`, icon: "i-lucide-check", color: "success" })
-    setTimeout(() => { copiedSource.value = null }, 2000)
+    setTimeout(() => {
+      copiedSource.value = null
+    }, 2000)
   } catch {
     toast.add({ title: "Failed to copy", color: "error" })
   }
@@ -59,7 +62,7 @@ async function copyLink() {
   <UPopover v-model:open="shareOpen" :ui="{ content: 'w-72 p-3' }">
     <UButton icon="i-lucide-share-2" label="Share" size="sm" color="neutral" variant="outline" />
     <template #content>
-      <p class="text-muted mb-2 px-1 text-xs font-medium uppercase tracking-wide">Copy link for</p>
+      <p class="text-muted mb-2 px-1 text-xs font-medium tracking-wide uppercase">Copy link for</p>
       <div class="grid grid-cols-2 gap-1.5">
         <UButton
           v-for="platform in platforms"

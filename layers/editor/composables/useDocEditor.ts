@@ -16,7 +16,24 @@
  */
 import type { Ref } from "vue"
 
-import { computeReadingStats } from "./useReadingStats"
+// Inline reading stats — avoids a cross-layer import
+// (same logic as reader/composables/useReadingStats.ts)
+const WORDS_PER_MINUTE = 238
+function _computeStats(rawText: string) {
+  const clean = rawText
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/[*_]{1,3}([^*_]+)[*_]{1,3}/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+  const words = clean.length === 0 ? 0 : clean.split(/\s+/).filter(Boolean).length
+  const mins = Math.floor(Math.round((words / WORDS_PER_MINUTE) * 60) / 60)
+  return { words, readingTimeMin: mins }
+}
 
 export interface DocEditorMeta {
   title: string
@@ -85,7 +102,7 @@ export function useDocEditor(options: DocEditorOptions) {
   const hasUnsavedChanges = computed(() => content.value !== savedContent.value)
 
   // ── Stats ──────────────────────────────────────────────────────────────────
-  const stats = computed(() => computeReadingStats(content.value))
+  const stats = computed(() => _computeStats(content.value))
   const wordCount = computed(() => stats.value.words)
   const readingTime = computed(() => stats.value.readingTimeMin)
 

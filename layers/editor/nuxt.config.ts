@@ -1,7 +1,9 @@
 // nuxt-docs-kit — editor layer
-// Provides: DocEditor page, editor toolbar, gallery, settings panels,
-// useDocContent, useDocEditor, useEditorToolbar.
+// Provides: useDocEditor, useEditorToolbar
 //
-// Peer dependencies: @nuxt/ui, @tiptap/*, comark
+// Peer dependencies: @nuxt/ui, @vueuse/nuxt, comark
 
-export default defineNuxtConfig({})
+export default defineNuxtConfig({
+  modules: ["@vueuse/nuxt"],
+  components: [{ path: "./components", prefix: "" }],
+})
