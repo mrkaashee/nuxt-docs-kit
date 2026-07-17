@@ -215,17 +215,45 @@ export function useDocEditor(options: DocEditorOptions) {
   const previewParsing = ref(false)
 
   async function buildPreview() {
+    if (!content.value?.trim()) return
     previewParsing.value = true
     try {
       const { parse } = await import("comark")
       const mathPlugin = (await import("comark/plugins/math")).default
       const mermaidPlugin = (await import("comark/plugins/mermaid")).default
       const highlightPlugin = (await import("comark/plugins/highlight")).default
-      const res = await parse(content.value || "", {
+      const res = await parse(content.value, {
         plugins: [mathPlugin(), mermaidPlugin(), highlightPlugin()],
       })
+      // Sanitize AST — strips attribute names with "=" or spaces that crash
+      // Vue's vdom setAttribute on the client (same as qarpeo's sanitizeComarkAst)
+      if (res && Array.isArray(res.nodes)) {
+        function sanitize(nodes: any[]): any[] {
+          if (!Array.isArray(nodes)) return nodes
+          return nodes.map((node) => {
+            if (!Array.isArray(node)) return node
+            const [tag, attrs, ...children] = node
+            const clean: Record<string, any> = {}
+            if (attrs && typeof attrs === "object") {
+              for (const [k, v] of Object.entries(attrs)) {
+                if (
+                  k &&
+                  !k.includes("=") &&
+                  !k.includes(" ") &&
+                  !k.includes('"') &&
+                  !k.includes("'")
+                )
+                  clean[k] = v
+              }
+            }
+            return [tag, clean, ...sanitize(children)]
+          })
+        }
+        res.nodes = sanitize(res.nodes)
+      }
       previewAst.value = res
-    } catch {
+    } catch (e) {
+      console.error("[nuxt-doc-kit] buildPreview failed:", e)
       previewAst.value = null
     } finally {
       previewParsing.value = false
