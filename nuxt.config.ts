@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  extends: ["./layers/reader", "./layers/editor"],
   modules: ["@nuxt/ui", "@nuxthub/core", "@comark/nuxt"],
+  ui: { content: true },
   css: ["~/assets/css/main.css"],
   compatibilityDate: "2026-07-13",
   devtools: { enabled: true, timeline: { enabled: true } },
