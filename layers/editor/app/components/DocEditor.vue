@@ -26,14 +26,12 @@ import type { DocEditorSavePayload } from "#layers/editor/app/composables/useEdi
 
 // ── Props & emits ──────────────────────────────────────────────────────────────
 const props = defineProps<{
-  /** Doc metadata object (id, title, slug, language, seo, tags, ownerUsername…) */
   doc: any
-  /** Current markdown body */
   rawBody: string
-  /** Whether a draft exists that hasn't been published yet */
   hasDraft?: boolean
-  /** Path to navigate back to (read view) */
   basePath: string
+  /** Optional — resolves @mention search results. No hardcoded API calls inside the layer. */
+  resolveMentionSearch?: (query: string) => Promise<any[]>
 }>()
 
 const emit = defineEmits<{
@@ -54,6 +52,7 @@ const editorState = useEditorState({
   initialRawBody: rawBodyRef,
   onSave: async (payload) => { emit("save", payload) },
   onPublish: async () => { emit("publish") },
+  resolveMentionSearch: props.resolveMentionSearch,
 })
 
 const {

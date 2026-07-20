@@ -23,17 +23,28 @@ export interface DocEditorSavePayload {
   meta: DocEditorMeta
 }
 
+export type ResolveMentionSearch = (query: string) => Promise<MentionItem[]>
+
+export interface MentionItem {
+  id: string
+  label: string
+  type?: string
+  description?: string
+  avatar?: any
+  icon?: string
+  href?: string
+  mentionType?: string
+}
+
 export function useEditorState(options: {
-  /** Reactive doc object from the parent */
   doc: Ref<any>
-  /** Initial markdown body */
   initialRawBody: Ref<string>
-  /** Called by save() — parent handles the actual PATCH */
   onSave: (payload: DocEditorSavePayload) => Promise<void>
-  /** Called by publish() — parent handles the actual POST */
   onPublish: () => Promise<void>
+  /** Optional — resolves @mention search results. No hardcoded API. */
+  resolveMentionSearch?: ResolveMentionSearch
 }) {
-  const { doc, initialRawBody, onSave, onPublish } = options
+  const { doc, initialRawBody, onSave, onPublish, resolveMentionSearch } = options
   const toast = useToast()
 
   // ── Metadata ────────────────────────────────────────────────────────────────
@@ -243,24 +254,7 @@ export function useEditorState(options: {
     }
   })
 
-  // ── Mention search ───────────────────────────────────────────────────────────
-  // Host app provides a search function via:
-  //   provide('resolveMentionSearch', async (query) => MentionItem[])
-  // Falls back to an empty result if not provided.
-  type MentionItem = {
-    id: string
-    label: string
-    description?: string
-    avatar?: any
-    icon?: string
-    href?: string
-    mentionType?: string
-  }
-  const resolveMentionSearch = inject<((query: string) => Promise<MentionItem[]>) | null>(
-    "resolveMentionSearch",
-    null,
-  )
-
+  // ── Mention search — provided as parameter, not inject ────────────────────
   const mentionItems = ref<any[]>([{ type: "label", label: "Type 2+ characters to search" }])
   const mentionSearchTerm = ref("")
 
