@@ -38,11 +38,9 @@ export default defineNuxtConfig({
 The reader layer exports the following components — all prop-driven, no API calls:
 
 - \`<DocReader>\` — renders a Comark AST or markdown string
-- \`<DocPageTocSidebar>\` — TOC + save/actions sidebar
-- \`<DocPreviewBanner>\` — draft preview banner
-- \`<DocFollowersGate>\` — followers-only access gate
-- \`<DocRequestAccessGate>\` — private doc access request gate
-- \`<DocQuickActions>\` — share popover with UTM links
+- \`<ProseMath>\` — KaTeX math renderer
+- \`<ProseMermaid>\` — Mermaid diagram renderer
+- \`<ProseMention>\` — @mention chip with hover card (hover data via \`provide('resolveMentionHover')\`)
 
 ## Composables
 
@@ -83,12 +81,6 @@ const activeId = useActiveHeading(computed(() => tocLinks))
 
 // Reading stats
 const stats = useReadingStats(computed(() => rawBody))
-
-// Save state — in a real app the host calls its API here
-const isSaved = ref(false)
-function handleSave() {
-  isSaved.value = !isSaved.value
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric" })
@@ -157,17 +149,12 @@ function formatDate(iso: string) {
         </div>
       </UPageBody>
 
-      <!-- Right sidebar — DocPageTocSidebar from the reader layer -->
+      <!-- Right sidebar — plain TOC -->
       <template #right>
-        <DocPageTocSidebar
-          :toc-links="tocLinks"
-          base-path="/reader"
-          username="demo"
-          doc-slug="getting-started"
-          :logged-in="false"
-          :is-owner="false"
-          :is-saved="isSaved"
-          @save="handleSave"
+        <UContentToc
+          title="On this page"
+          highlight
+          :links="tocLinks"
         />
       </template>
     </UPage>
