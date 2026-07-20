@@ -38,9 +38,9 @@ const ast = computed(() => {
 })
 
 // ── Comark component map ────────────────────────────────────────────────────
-// Use defineAsyncComponent for ProseMath/ProseMermaid/ProseMention to avoid
-// resolveComponent returning undefined during SSR when layers load order varies.
-const comarkComponents = {
+// Use computed so resolveComponent is called at render time (not setup time).
+// This avoids undefined during SSR when layers haven't fully registered yet.
+const comarkComponents = computed(() => ({
   h1: resolveComponent("ProseH1"),
   h2: resolveComponent("ProseH2"),
   h3: resolveComponent("ProseH3"),
@@ -65,7 +65,7 @@ const comarkComponents = {
   "u-card": resolveComponent("UCard"),
   "u-page-card": resolveComponent("UPageCard"),
   "u-kbd": resolveComponent("UKbd"),
-}
+}))
 </script>
 
 <template>
