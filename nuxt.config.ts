@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxt/ui", "@nuxthub/core", "@comark/nuxt"],
+  modules: ["@nuxt/ui", "@nuxthub/core", "@comark/nuxt", "@vueuse/nuxt"],
   ui: { content: true },
   css: ["~/assets/css/main.css"],
   compatibilityDate: "2026-07-13",
