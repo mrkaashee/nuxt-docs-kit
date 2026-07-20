@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { convertLatexToMarkdown, isLatexDocument } from "#shared/utils/docs"
+import { convertLatexToMarkdown, isLatexDocument } from "#layers/editor/shared/utils/latex"
 /**
  * CodeMirror 6 markdown editor.
  * Lazy-loaded — only imports CodeMirror when this component mounts.
