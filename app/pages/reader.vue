@@ -103,7 +103,14 @@ function formatDate(iso: string) {
         <template #title>{{ doc.title }}</template>
         <template #description>{{ doc.description }}</template>
         <template #links>
-          <DocQuickActions :doc-url="`http://localhost:3000/reader`" :doc-title="doc.title" />
+          <UButton
+            icon="i-lucide-share-2"
+            label="Share"
+            color="neutral"
+            variant="outline"
+            size="sm"
+            @click="navigator.clipboard?.writeText('http://localhost:3000/reader')"
+          />
         </template>
       </UPageHeader>
 
